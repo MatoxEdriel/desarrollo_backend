@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import { PORT } from "./environments/env";
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.get(
   }
 );
 
-const port: number = 3000;
+const port: number = Number(PORT);
 app.listen(port, () => {
     console.log('El servidor esta levantado en el puerto:', port);
 });
