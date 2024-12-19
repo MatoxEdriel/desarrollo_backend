@@ -1,6 +1,8 @@
 import { Request } from "express";
 import { AuthService } from "./services";
 
+
+//!Esta parte del codigo se podria decir que es un adapter 
 export const registerController = async (req: Request) => {
   try {
     console.log(req.body)
@@ -19,4 +21,21 @@ export const loginController = async (req: Request) => {
    } catch (error) {
      throw error
    }
+}
+
+export const lookService = async(req:Request) => {
+
+  try{
+    const{username, password} = req.body;
+    console.log(req.body)
+    //que es token? xd
+    
+
+  }catch (error){
+    throw error 
+
+
+  }
+
+
 }
