@@ -11,9 +11,9 @@ const routes = Router();
 routes.get("/look", 
   async (req: Request, res: Response, next: NextFunction) => {
     try{
-        const response = await lookService(req)
+        //const response = await lookService(req)
 
-        res.status(201).json(response);
+       // res.status(201).json(response);
 
 
     }catch (error){
