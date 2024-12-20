@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { loginController, registerController } from "./controller";
+//import { loginController, registerController } from "./controller";
 
 const routes = Router();
 //Se mandaria desde las peticiones de base de dato 
@@ -36,6 +37,7 @@ routes.post(
     try {
       //El uso de await es relacionado a asyn
       const response = await registerController(req)
+  
       res.status(201).json(response);
     } catch (error) {
       throw error
