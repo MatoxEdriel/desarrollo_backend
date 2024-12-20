@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { loginController, registerController } from "./controller";
+//import { loginController, registerController } from "./controller";
 
 const routes = Router();
 //Se mandaria desde las peticiones de base de dato 
@@ -11,9 +12,9 @@ const routes = Router();
 routes.get("/look", 
   async (req: Request, res: Response, next: NextFunction) => {
     try{
-        const response = await lookService(req)
+        //const response = await lookService(req)
 
-        res.status(201).json(response);
+       // res.status(201).json(response);
 
 
     }catch (error){
@@ -36,6 +37,7 @@ routes.post(
     try {
       //El uso de await es relacionado a asyn
       const response = await registerController(req)
+  
       res.status(201).json(response);
     } catch (error) {
       throw error

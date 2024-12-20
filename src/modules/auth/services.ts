@@ -1,3 +1,5 @@
+import { CodigosHttpEnum } from '../../enums/codesHttpEnum';
+import { HttpResponse } from '../../utils/httpResponse';
 import AuthRepository from './repository';
 
 export class AuthService {
@@ -14,7 +16,8 @@ export class AuthService {
         }
 
         const newUser = await this.authRepository.createUser({ username, password });
-        return newUser;
+        // return newUser;
+        return HttpResponse.response(CodigosHttpEnum.created, newUser, "Usuario creado con exito");
     }
 
     async loginService(username: string, password: string) {

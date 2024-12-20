@@ -1,14 +1,22 @@
 import { Request } from "express";
 import { AuthService } from "./services";
+import { HttpResponse } from "../../utils/httpResponse";
+import { CodigosHttpEnum } from "../../enums/codesHttpEnum";
+import { IUser } from "./repository";
 
 
 //!Esta parte del codigo se podria decir que es un adapter 
 export const registerController = async (req: Request) => {
   try {
     console.log(req.body)
-    const { username, password } = req.body;
-    const user = await new AuthService().registerService(username, password);
-    return {'message': 'Usuario creado', 'usuario': user};
+  //  const { username, password } = req.body;
+  const { username, password } = req.body as IUser
+  
+    return await new AuthService().registerService(username, password);
+    // const user = await new AuthService().registerService(username, password);
+    // return {'message': 'Usuario creado', 'usuario': user};
+    //use como respuesta una personalizada 
+    //  return HttpResponse.response(CodigosHttpEnum.ok, user, "usuario registrado");
   } catch (error) {}
 };
 

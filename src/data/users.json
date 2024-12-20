@@ -1,0 +1,27 @@
+[
+  {
+    "username": "john_doe",
+    "password": "password123"
+  },
+  {
+    "username": "jane_smith",
+    "password": "qwerty456"
+  },
+  {
+    "username": "mark_brown",
+    "password": "abc123xyz"
+  },
+  {
+    "username": "emily_white",
+    "password": "securePass789"
+  },
+  {
+    "username": "daniel_black",
+    "password": "hunter2"
+  },
+  {},
+  {
+    "username": "Gabriel Campoverde",
+    "password": "OWOWOWO "
+  }
+]
