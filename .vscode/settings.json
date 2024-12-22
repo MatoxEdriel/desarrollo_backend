@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "nuevo modulo para la funcionalidad de leer usuarios desde archivos",
-        "Modulo leer usuario con JSON"
+        "Modulo leer usuario con JSON",
+        "backend"
     ]
 }

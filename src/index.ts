@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { PORT } from "./environments/env";
 import authRoutes from "./modules/auth/routes"
+import routesUser from "./modules/users/routes";
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use(express.json())
 const prefix: string = "/api";
 
 app.use(`${prefix}/auth`, authRoutes);
+app.use(`${prefix}/users`, routesUser);
 
 const port: number = Number(PORT);
 app.listen(port, () => {
