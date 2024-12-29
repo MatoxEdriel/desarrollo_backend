@@ -23,7 +23,7 @@ export default class UserRepository {
             await this.writeUsers(users);
             return user;
         } catch (error) {
-            throw error
+            throw new Error("ERROR ")
         }
     }
 
@@ -51,14 +51,32 @@ export default class UserRepository {
         //DELETE 
     }
 
-    async updateUsers(user: IUser, newUserName: string, newPassword: string): Promise<IUser> {
-        return{
-            //implicitamente usa las propiedades de los datos ingresados en los parametros y los toma
-            //!en este caso lo toma y con eso se puede editar los datos ingresados
-            ...user,
-            username: newUserName,
-            password : newPassword
+    async updateUsers(userName: string, newUserName: string, newPassword: string): Promise<void> {
+        //!Hay que confirmar primero su existencia 
+
+        try {
+            const lstUser = this.readUsers();
+            const userExist = (await lstUser).find(u => u.username === userName)
+            if (!userExist) {
+
+                //forma correcta de mandar error 
+                throw new Error("User not found");
+            }
+            else {
+                userExist.username = newUserName;
+                userExist.password = newPassword;
+                await this.writeUsers(await lstUser);
+
+            }
+        } catch (error) {
+            throw new Error("ERROR de acta")
+
         }
+
+
+
+
+
     }
 
     // async updateUsers(user: IUser, newUserName: string, newPassword: string): Promise<void> {
@@ -69,17 +87,17 @@ export default class UserRepository {
 
     //DELETE
     async deleteUser(user: IUser): Promise<void> {
-        const lstUser = await this.readUsers();        
-        const index = lstUser.findIndex(existingUser => existingUser.username === user.username); 
+        const lstUser = await this.readUsers();
+        const index = lstUser.findIndex(existingUser => existingUser.username === user.username);
         if (index !== -1) {
-            lstUser.splice(index, 1);  
+            lstUser.splice(index, 1);
             console.log('Usuario eliminado:', user);
         } else {
             console.log('Usuario no encontrado');
         }
-    
+
     }
-    
+
 
 
 

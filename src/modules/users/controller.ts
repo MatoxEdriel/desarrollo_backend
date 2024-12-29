@@ -29,23 +29,22 @@ export const readController = async (req: Request, res: Response) => {
     }
 
 }
-export const updateController = async (req: Request, res: Response) => {
+export const updateController = async (req: Request, res:Response): Promise<void> => {
 
     try {
+        // se supone que recibira el username del nombre que se cambiara
+     //   const usernameToUpdate = req.params.username as unknown as IUser;
+  
+        const userNameToUpdate = req.params.username;
+        const {username, password}= req.body as IUser;
 
-        const { username, password } = req.body as IUser;
+//recuerda lo que recepta 
+        await new UserRepository().updateUsers(userNameToUpdate,username,password);
 
-        const user = await new UserRepository().readUsers();
+        //!la verificacion lo hace el metodo anterior 
 
-        const userFounded = user.find(userExiting => userExiting.username === username);
 
-        //necesitas una forma de traer ese usuario 
-
-        if (!userFounded) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        } else {
-            return await new UserRepository().updateUsers(userFounded, username, password);
-        }
+        
     } catch (error) {
         res.status(500).json({ message: 'Error al actualizar el usuario' });
     }

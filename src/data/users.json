@@ -4,8 +4,8 @@
     "password": "password123"
   },
   {
-    "username": "jane_smith",
-    "password": "qwerty456"
+    "username": "Ethan_Campoverde",
+    "password": "PRUEBA28"
   },
   {
     "username": "mark_brown",
@@ -31,5 +31,17 @@
   {
     "username": "Gabriel Eduardo Campoverde Jumbo",
     "password": "PRUEBA 1 "
+  },
+  {
+    "username": "Gabriel Eduardo lorenzo Jumbo",
+    "password": "PRUEBA 1 "
+  },
+  {
+    "username": "Ethan_Campoverde_Jumbo",
+    "password": "PRUEBA"
+  },
+  {
+    "username": "Ethan_Campoverde_Jumbo",
+    "password": "PRUEBA2"
   }
 ]

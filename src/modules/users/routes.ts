@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 
-import { registerController, readController,updateController,deleteController } from "./controller";
+import { registerController, readController, updateController, deleteController } from "./controller";
+import { IUser } from "../auth/repository";
+import UserRepository from "./repository";
+
 
 
 const routesUser = Router();
@@ -21,12 +24,37 @@ routesUser.post("/registrar", async (req: Request, res: Response, next: NextFunc
 
 routesUser.get("/getUsers", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // Llamamos al controlador, el cual maneja la respuesta directamente
-        await readController(req, res);  // Pasamos req, res, y next como parámetros a readController
+  
+        await readController(req, res); 
     } catch (error) {
-        next(error);  // Si ocurre un error, lo pasamos al siguiente middleware (por ejemplo, un handler de errores)
+        next(error);  
     }
 });
+
+
+routesUser.put("/updateUser/:username", async (req: Request, res: Response) => {
+    try {
+
+        console.log("Username:", req.params.username);
+        console.log("Body:", req.body);
+        const updateUser = await updateController(req, res);
+
+        res.status(200).json({
+            message: "User updated successfully",
+            user: updateUser // Devuelve los datos actualizados, opcional
+        });
+       
+    } catch (error) {
+        res.status(500).json({
+            error: "error Ruta",
+            details: "xd"
+
+        });
+     
+    }
+
+});
+
 
 
 //!indicar que resultado 
