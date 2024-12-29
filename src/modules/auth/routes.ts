@@ -46,7 +46,7 @@ routes.post(
 );
 routes.post(
   "/login",
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     try {
       const response = await loginController(req)
       res.status(200).json(response);
