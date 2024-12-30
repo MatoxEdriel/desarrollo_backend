@@ -3,6 +3,9 @@ import { NextFunction, Request, Response, Router } from "express";
 import { registerController, readController, updateController, deleteController } from "./controller";
 import { IUser } from "../auth/repository";
 import UserRepository from "./repository";
+import { ResponseService } from '../../error/response.service';
+import { HttpStatus } from "../../enums/codesHttpEnum";
+
 
 
 
@@ -10,24 +13,36 @@ const routesUser = Router();
 
 
 
-//Haremos primero el CREATE
+
 //!CREATE
 routesUser.post("/registrar", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        //recibira esto 
+        //!INVESTIGAR SI ES BUENA PRACTICAR PONER ESTOS DATOS AQUI 
+        const timeCurrently = new Date();
         const response = await registerController(req);
-        res.status(201).json(response)
+        res.status(HttpStatus.ok).json(ResponseService.success({
+            response:response,
+            createAt: timeCurrently
+        }
+        ));
     } catch (error) {
         throw new Error("AQUI");
     }
 });
 
+
+
+
+//??implementacion de nueva clase de control de error 
+
+
+
 routesUser.get("/getUsers", async (req: Request, res: Response, next: NextFunction) => {
     try {
-  
-        await readController(req, res); 
+
+        await readController(req, res);
     } catch (error) {
-        next(error);  
+        next(error);
     }
 });
 
@@ -43,14 +58,14 @@ routesUser.put("/updateUser/:username", async (req: Request, res: Response) => {
             message: "User updated successfully",
             user: updateUser // Devuelve los datos actualizados, opcional
         });
-       
+
     } catch (error) {
         res.status(500).json({
             error: "error Ruta",
             details: "xd"
 
         });
-     
+
     }
 
 });
