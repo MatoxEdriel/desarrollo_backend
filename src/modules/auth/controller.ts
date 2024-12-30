@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { AuthService } from "./services";
 import { HttpResponse } from "../../utils/httpResponse";
-import { CodigosHttpEnum } from "../../enums/codesHttpEnum";
+import { HttpStatus } from "../../enums/codesHttpEnum";
 import { IUser } from "./repository";
 
 

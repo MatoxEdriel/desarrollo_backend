@@ -7,6 +7,7 @@ import { IScriptSnapshot } from "typescript";
 
 export const registerController = async (req: Request) => {
     try {
+   
         const { username, password } = req.body as IUser;
         return await new UserRepository().createUser({ username, password });
     } catch (error) {
