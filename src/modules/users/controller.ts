@@ -69,9 +69,15 @@ export const updateController = async (req: Request, res:Response): Promise<void
 
 export const deleteController = async (req: Request, res: Response) => {
     try {
-        const { username, password } = req.body as IUser;
-        await new UserRepository().deleteUser({ username, password });
-        res.status(200).json({ message: 'Usuario eliminado correctamente' });
+
+        const userNameToDelete = req.params.username;
+
+        await new UserRepository().deleteUser(userNameToDelete);
+
+        
+        // const { username, password } = req.body as IUser;
+        // await new UserRepository().deleteUser({ username, password });
+        // res.status(200).json({ message: 'Usuario eliminado correctamente' });
     } catch (error) {
         res.status(500).json({ message: 'Error al eliminar el usuario'});
     }

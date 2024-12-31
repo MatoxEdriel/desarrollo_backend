@@ -70,6 +70,26 @@ routesUser.put("/updateUser/:username", async (req: Request, res: Response) => {
 
 });
 
+routesUser.delete("/deleteUser/:username", async(req:Request, res:Response)=>{
+    try {
+        const deleteUser = await deleteController(req, res);
+
+        res.status(200).json({
+            message: "user Deleted",
+            userName: deleteUser
+        })
+
+
+
+    } catch (error) {
+
+        
+
+    }
+})
+
+
+
 
 
 //!indicar que resultado 

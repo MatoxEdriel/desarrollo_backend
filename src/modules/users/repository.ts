@@ -66,34 +66,47 @@ export default class UserRepository {
                 userExist.username = newUserName;
                 userExist.password = newPassword;
                 await this.writeUsers(await lstUser);
-
             }
         } catch (error) {
             throw new Error("ERROR de acta")
-
         }
-
-
-
-
-
     }
 
-    // async updateUsers(user: IUser, newUserName: string, newPassword: string): Promise<void> {
-    //     user.username = newUserName;
-    //     user.password = newPassword;
-    // }
+
 
 
     //DELETE
-    async deleteUser(user: IUser): Promise<void> {
-        const lstUser = await this.readUsers();
-        const index = lstUser.findIndex(existingUser => existingUser.username === user.username);
-        if (index !== -1) {
-            lstUser.splice(index, 1);
-            console.log('Usuario eliminado:', user);
-        } else {
-            console.log('Usuario no encontrado');
+    // async deleteUser(user: IUser): Promise<void> {
+    //     const lstUser = await this.readUsers();
+    //     const index = lstUser.findIndex(existingUser => existingUser.username === user.username);
+    //     if (index !== -1) {
+    //         lstUser.splice(index, 1);
+    //         console.log('Usuario eliminado:', user);
+    //     } else {
+    //         console.log('Usuario no encontrado');
+    //     }
+
+    // }
+
+    async deleteUser(userName: string): Promise<void> {
+        try {
+            const lstUser = this.readUsers();
+            // const userExit = (await lstUser).find(u => u.username===userName)
+            const indexUser = (await lstUser).findIndex(existUser => existUser.username === userName)
+            if (indexUser == -1) {
+                //!ERROR DE USUARIO QUE SE DESEA BORRAR
+                //!NO EXISTE 
+                //?PREGUNTA ESTE TIPO DE ERRORES SE DEBE PONER con la clase? 
+                throw new Error("üsuario no encontrado");
+            }
+            else {
+                (await lstUser).splice(indexUser, 1);
+                //AVISO EXISTOSO 
+                console.log("BORRADO")
+                await this.writeUsers(await lstUser);
+            }
+        } catch (error) {
+            throw new Error("no se ha leido ");
         }
 
     }
