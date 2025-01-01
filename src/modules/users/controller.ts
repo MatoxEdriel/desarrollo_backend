@@ -5,12 +5,16 @@ import UserRepository from "./repository";
 import { IScriptSnapshot } from "typescript";
 import { ResponseService } from "../../error/response.service";
 import { ResponseModel } from "../../error/response.model";
+import { UserValidation } from "./validation";
 
 
 export const registerController = async (req: Request) => {
     try {
 
         const { username, password } = req.body as IUser;
+      
+       
+  
         return await new UserRepository().createUser({ username, password });
     } catch (error) {
         throw new Error("error");
@@ -54,15 +58,12 @@ export const deleteController = async (req: Request, res: Response) => {
         await new UserRepository().deleteUser(userNameToDelete);
 
 
-        // const { username, password } = req.body as IUser;
-        // await new UserRepository().deleteUser({ username, password });
-        // res.status(200).json({ message: 'Usuario eliminado correctamente' });
     } catch (error: any) {
         //!MANDAR UN JSONA
         throw {
             code: 'USER_DELETE_FAILED',
             message: `Error deleting user: ${error.message}`,
-            status: 500 // Internal Server Error
+            status: 500 
         }
 
 
