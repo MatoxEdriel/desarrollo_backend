@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { NextFunction, Request, response, Response, Router } from "express";
 
 import { registerController, readController, updateController, deleteController } from "./controller";
 import { IUser } from "../auth/repository";
@@ -21,7 +21,7 @@ routesUser.post("/registrar", async (req: Request, res: Response, next: NextFunc
         const timeCurrently = new Date();
         const response = await registerController(req);
         res.status(HttpStatus.ok).json(ResponseService.success({
-            response:response,
+            response: response,
             createAt: timeCurrently
         }
         ));
@@ -53,37 +53,25 @@ routesUser.put("/updateUser/:username", async (req: Request, res: Response) => {
         console.log("Username:", req.params.username);
         console.log("Body:", req.body);
         const updateUser = await updateController(req, res);
-
-        res.status(200).json({
-            message: "User updated successfully",
-            user: updateUser // Devuelve los datos actualizados, opcional
-        });
+        const responseUpdate = ResponseService.success(updateUser)
+        res.status(responseUpdate.statusCode).json(responseUpdate)
 
     } catch (error) {
-        res.status(500).json({
-            error: "error Ruta",
-            details: "xd"
 
-        });
+        const responseErroUpdate = ResponseService.exception("error de actualizacion");
+        res.status(responseErroUpdate.statusCode).json(responseErroUpdate);
 
     }
 
 });
 
-routesUser.delete("/deleteUser/:username", async(req:Request, res:Response)=>{
+routesUser.delete("/deleteUser/:username", async (req: Request, res: Response) => {
     try {
         const deleteUser = await deleteController(req, res);
-
-        res.status(200).json({
-            message: "user Deleted",
-            userName: deleteUser
-        })
-
-
-
+        res.status(HttpStatus.ok).json(ResponseService.success(deleteUser));
     } catch (error) {
-
-        
+        const responseError = ResponseService.exception("error de ruta");
+        res.status(responseError.statusCode).json(responseError)
 
     }
 })
