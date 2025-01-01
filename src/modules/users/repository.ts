@@ -1,6 +1,7 @@
 import { IUser } from "../auth/repository";
 import fs from 'fs/promises';
 import path from "path";
+import { UserValidation } from "./validation";
 
 
 const dataPathUser = path.join("src", "data", "users.json");
@@ -19,6 +20,7 @@ export default class UserRepository {
     async createUser(user: IUser): Promise<IUser> {
         try {
             const users = await this.readUsers();
+         
             users.push(user);
             await this.writeUsers(users);
             return user;
@@ -68,22 +70,7 @@ export default class UserRepository {
         }
     }
 
-
-
-
-    //DELETE
-    // async deleteUser(user: IUser): Promise<void> {
-    //     const lstUser = await this.readUsers();
-    //     const index = lstUser.findIndex(existingUser => existingUser.username === user.username);
-    //     if (index !== -1) {
-    //         lstUser.splice(index, 1);
-    //         console.log('Usuario eliminado:', user);
-    //     } else {
-    //         console.log('Usuario no encontrado');
-    //     }
-
-    // }
-
+  
     async deleteUser(userName: string): Promise<void> {
         try {
             const lstUser = this.readUsers();

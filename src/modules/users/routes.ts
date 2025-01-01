@@ -5,6 +5,11 @@ import { IUser } from "../auth/repository";
 import UserRepository from "./repository";
 import { ResponseService } from '../../error/response.service';
 import { HttpStatus } from "../../enums/codesHttpEnum";
+import { UserValidation } from './validation';
+
+
+
+
 
 
 
@@ -17,16 +22,26 @@ const routesUser = Router();
 //!CREATE
 routesUser.post("/registrar", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        //!INVESTIGAR SI ES BUENA PRACTICAR PONER ESTOS DATOS AQUI 
+        const { username } = req.body;
+        await UserValidation.validationTypeUserName(username);
         const timeCurrently = new Date();
         const response = await registerController(req);
+
         res.status(HttpStatus.ok).json(ResponseService.success({
             response: response,
             createAt: timeCurrently
-        }
-        ));
+        }));
     } catch (error) {
-        throw new Error("AQUI");
+        if (error instanceof Error) {
+            res.status(HttpStatus.badRequest).json({
+                message: error.message 
+            });
+        } else {
+      
+            res.status(HttpStatus.internalServerError).json({
+                message: "Internal Server Error"
+            });
+        }
     }
 });
 
@@ -45,6 +60,7 @@ routesUser.get("/getUsers", async (req: Request, res: Response, next: NextFuncti
         next(error);
     }
 });
+
 
 
 routesUser.put("/updateUser/:username", async (req: Request, res: Response) => {
