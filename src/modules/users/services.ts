@@ -1,4 +1,4 @@
-import { Person }  from "./class/Person";
+import { Person }  from "./domain/Person";
 import { IUser } from './interfaces/IUser';
 
 

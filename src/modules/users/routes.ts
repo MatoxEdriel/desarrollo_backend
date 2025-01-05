@@ -4,8 +4,9 @@ import { registerController, readController, updateController, deleteController 
 import { IUser } from "../auth/repository";
 import UserRepository from "./repository";
 import { ResponseService } from '../../error/response.service';
-import { HttpStatus } from "../../enums/codesHttpEnum";
+import { ErrorCodes, HttpStatus } from "../../enums/codesHttpEnum";
 import { UserValidation } from './validation';
+import { UserException } from "../../error/UserException";
 
 
 
@@ -17,41 +18,29 @@ import { UserValidation } from './validation';
 const routesUser = Router();
 
 
-
-
-//!CREATE
-routesUser.post("/registrar", async (req: Request, res: Response, next: NextFunction) => {
+routesUser.post("/register", async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { username } = req.body;
+        const { username, password } = req.body;
         await UserValidation.validationTypeUserName(username);
-        const timeCurrently = new Date();
+        await UserValidation.validationTypePassword(password);
         const response = await registerController(req);
-
         res.status(HttpStatus.ok).json(ResponseService.success({
             response: response,
-            createAt: timeCurrently
         }));
+
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(HttpStatus.badRequest).json({
-                message: error.message 
-            });
-        } else {
-      
-            res.status(HttpStatus.internalServerError).json({
-                message: "Internal Server Error"
-            });
+        if (error instanceof UserException) {
+            res.status(HttpStatus.badRequest).json(ResponseService.error(
+                ErrorCodes.INVALID_REQUEST,
+                error.message,
+                HttpStatus.badRequest
+            ));
+        }
+        else {
+            res.status(HttpStatus.internalServerError).json(ResponseService.exception("Ocurrio un error inesperado en el servidor"))
         }
     }
 });
-
-
-
-
-//??implementacion de nueva clase de control de error 
-
-
-
 routesUser.get("/getUsers", async (req: Request, res: Response, next: NextFunction) => {
     try {
 

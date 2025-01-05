@@ -2,6 +2,8 @@ import { IUser } from "../auth/repository";
 import fs from 'fs/promises';
 import path from "path";
 import { UserValidation } from "./validation";
+import { error } from "console";
+import { UserException } from "../../error/UserException";
 
 
 const dataPathUser = path.join("src", "data", "users.json");
@@ -16,18 +18,31 @@ export default class UserRepository {
     //!usarem promise porque prometere xd que tendra un usuario 
 
     //*CREATE   USAR EN CONFIRMACION
+    //Aqui hacemos la validacion si ya existe ee uaurio 
+    //!Ahora implementaremos las validaciones aqui 
 
     async createUser(user: IUser): Promise<IUser> {
-        try {
-            const users = await this.readUsers();
-         
-            users.push(user);
-            await this.writeUsers(users);
-            return user;
-        } catch (error) {
-            throw new Error("ERROR ")
+        const lstUsers = await this.readUsers();
+      
+        //Aqui se implementaria las debidas 
+      
+        const {username } = user;
+        const userExists = lstUsers.find(u => u.username === user.username);
+        if (!userExists) {
+            lstUsers.push(user);
         }
+        else {
+            throw new UserException(`the username ${username} is already taken`);
+        }
+
+       
+
+
+        await this.writeUsers(lstUsers);
+        return user;
+
     }
+
 
 
     //*
@@ -49,28 +64,28 @@ export default class UserRepository {
         } catch (error) {
             throw error
         }
-        //UPDATE 
-        //DELETE 
+
     }
+
+    //hare la primera prueba donde no manejare errores desde aqui 
+    //!Quite el tryCatch para que otra capa se encargue del error 
+    //!Al paasar esto a la siguiente se contraolada desde controller
 
     async updateUsers(userName: string, newUserName: string, newPassword: string): Promise<void> {
-        try {
-            const lstUser = this.readUsers();
-            const userExist = (await lstUser).find(u => u.username === userName)
-            if (!userExist) {
-                throw new Error("User not found");
-            }
-            else {
-                userExist.username = newUserName;
-                userExist.password = newPassword;
-                await this.writeUsers(await lstUser);
-            }
-        } catch (error) {
-            throw new Error("ERROR de acta")
+        const lstUser = this.readUsers();
+        const userExist = (await lstUser).find(u => u.username === userName)
+        if (!userExist) {
+            throw new UserException("Usuario no encontrado  X_X ");
         }
+        else {
+            userExist.username = newUserName;
+            userExist.password = newPassword;
+            await this.writeUsers(await lstUser);
+        }
+
     }
 
-  
+
     async deleteUser(userName: string): Promise<void> {
         try {
             const lstUser = this.readUsers();
