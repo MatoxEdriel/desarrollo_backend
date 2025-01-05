@@ -1,14 +1,6 @@
 // response.service.ts
 import { HttpStatus, ErrorCodes } from '../enums/codesHttpEnum';
 import { ResponseModel } from './response.model';
-
-
-//!MANEJO DE ERROR 
-
-//VALIDACION 
-
-
-
 export class ResponseService {
     static success(bodyResponse: any, statusCode: HttpStatus = HttpStatus.ok): ResponseModel {
         return new ResponseModel('OK001', bodyResponse, statusCode);
@@ -16,24 +8,10 @@ export class ResponseService {
 
 
 
-    /*
-!Estructura para excepciones 
-            {
-                    bodyReponsee 
-                }
-
-
-    */
-
-
 
     static error(errorCode: ErrorCodes, message: string, statusCode: HttpStatus = HttpStatus.badRequest): ResponseModel {
         return new ResponseModel(errorCode, message, statusCode);
     }
-
-
-
-
 
 
     static exception(message: string): ResponseModel {

@@ -11,5 +11,6 @@ export enum ErrorCodes {
     COURSE_EMPTY = 'ER002',
     INVALID_REQUEST = 'ER111',
     TEXT_NOT_FOUND = 'ER101',
-    EMPTY_RESULT = 'ER003'
+    EMPTY_RESULT = 'ER003',
+    USER_EXISTS  = 'ER005'
 }
