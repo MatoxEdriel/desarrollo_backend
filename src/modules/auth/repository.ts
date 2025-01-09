@@ -1,86 +1,100 @@
-//por que por aqui ?
-//!Permite leer y carar archivos desde node js
-import { write } from 'fs';
+import { IUser } from "../user/repository";
 import fs from 'fs/promises';
-//con esta libreria puedes manipular correctamente la ruta 
-//!esto con el objetivo de que las ruta no solo sea en un solo IO, si no que cuando se use
-//!docker ya corra ciertos archivos 
 import path from "path";
+import { UserValidation } from "./validation";
+import { error } from "console";
+import { UserException } from "../../error/UserException";
 
 
+import { passwordHelper } from "../../utils/httpResponse";
+//Se tiene acceso a la base de dato en cuestion 
+
+const dataPathUser = path.join("src", "data", "users.json");
 
 
-
-export interface IUser {
-    username: string;
-    password: string;
-}
-
-// const users: IUser[] = []; // In-memory storage
-//!si te das cuenta recibe como parametro el join 
-//!la direccion de los archivos pero en una destructuracion 
-const dataFilePath = path.join("src", "data", "users.json")
-export default class AuthRepository {
-
-
-
-
-    //promete que sera ingrsado un usuario User 
-    //!Metodo nuevo 
-    //guardado en una carpeta 
-    async writeUsers(users: IUser[]): Promise<void> {
-
-        await fs.writeFile(dataFilePath, JSON.stringify(users, null, 2), 'utf-8');
-
+export default class UserRepository {
+    async createUser(user: IUser): Promise<IUser> {
+        const lstUsers = await this.readUsers();
+        const { username, password } = user;
+        const passwordHasheado = await passwordHelper.hashPassword(password);
+        const newUser = { username, password: passwordHasheado };
+        const userExists = lstUsers.find(u => u.username === user.username);
+        if (!userExists) {
+            lstUsers.push(newUser);
+            await this.writeUsers(lstUsers);
+        }
+        else {
+            throw new UserException(`the username ${username} is already taken`);
+        }
+        return newUser;
     }
+
+
+    async writeUsers(users: IUser[]): Promise<void> {
+        await fs.writeFile(dataPathUser, JSON.stringify(users, null, 2), 'utf-8');
+    }
+
+
+
 
     async readUsers(): Promise<IUser[]> {
-
         try {
-            //File System FS  
-            const data = await fs.readFile(dataFilePath, 'utf-8');
+            const data = await fs.readFile(dataPathUser, 'utf-8');
             return JSON.parse(data)
-
-
         } catch (error) {
             throw error
         }
-
-
     }
 
 
+    async updateUsers(userName: string, newUserName: string, newPassword: string): Promise<void> {
+        const lstUser = this.readUsers();
+        const userExist = (await lstUser).find(u => u.username === userName)
+        if (!userExist) {
+            throw new UserException("Usuario no encontrado  X_X ");
+        }
+        else {
+            userExist.username = newUserName;
+            userExist.password = newPassword;
+            await this.writeUsers(await lstUser);
+        }
 
-
-    async findByUsername(username: string): Promise<IUser | undefined> {
-
-        const users = await this.readUsers();
-
-        return users.find(user => user.username === username);
     }
 
-    //!Cambiaremos el metodo para que se adapte de acuedo a los datos actuales 
-    async createUser(user: IUser): Promise<IUser> {
+    async findByUsername(username: string): Promise<IUser | null> {
         try {
-            //claro usabamos como simulacion los metodo deun aarray para meter mas 
-            //!esto ya seria un array 
-            //!leo array
-            const users = await this.readUsers();
-            //Pense que simplemente seria un push pero se guardaria dentro del nuevo arreglo 
-            users.push(user);
-            //!Ahora se debe usar la funcion que hicismo write 
-            //ya que se debe guardar los nuevos datos en el archivo 
-            await this.writeUsers(users);
-
-            return user;
-
+            const lstUsers = await this.readUsers();
+            const userToEvaluate = lstUsers.find(user => user.username === username)
+            return userToEvaluate || null;
         } catch (error) {
-            throw error
+            throw new UserException("Error reading users or finding the username.");
+        }
+    }
 
+    async deleteUser(userName: string): Promise<void> {
+        try {
+            const lstUser = this.readUsers();
+            const indexUser = (await lstUser).findIndex(existUser => existUser.username === userName)
+            if (indexUser == -1) {
+                throw new Error("üsuario no encontrado");
+            }
+            else {
+                (await lstUser).splice(indexUser, 1);
+                console.log("BORRADO")
+                await this.writeUsers(await lstUser);
+            }
+        } catch (error) {
+            throw new Error("no se ha leido ");
         }
 
     }
 
 
 
-};
+
+
+
+
+
+
+}

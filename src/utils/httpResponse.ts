@@ -1,5 +1,12 @@
 //usaremos namespace 
 //? escomo un tipo de clase, teniendo 3 tipo de respuesta en namespace
+import bcrypt from 'bcrypt';
+
+import { SALT_ROUNDS } from '../environments/env';
+
+
+//import { SALT_ROUNDS } from "../environments/env";
+
 
 //!con el generico podemos definir el tipo de data cuando usemos el interfaz jeje
 export interface IHttpResponse<T> {
@@ -12,8 +19,27 @@ export interface IHttpResponse<T> {
 
 }
 
+
+
+
 //!REPASAR 
 //Estudiar esta estructura de error mediante interfaces 
+
+//invesigar namespace y como se usa variablez de entorno y por que funciono DIFERENTE EN OTRA CARPETA 
+//?Repasar nameSpace concepto
+const salt_rounds: number = Number(SALT_ROUNDS);
+
+
+export namespace passwordHelper {
+  
+    export async function hashPassword(password: string): Promise<string> {
+        const hashedPassword = await bcrypt.hash(password, salt_rounds);
+        return hashedPassword;
+        
+    }
+
+
+}
 export namespace HttpResponse {
     export const response = <T>(
         code: number,
