@@ -1,34 +1,82 @@
-import { HttpStatus } from '../../enums/codesHttpEnum';
-import { HttpResponse } from '../../utils/httpResponse';
-import AuthRepository from './repository';
+import { Person } from "./domain/Person";
+import { IUser } from './interfaces/IUser';
+import bcrypt from 'bcrypt';
+import UserRepository from './repository';
+import AuthRepository from '../user/repository';
+import { UserException } from "../../error/UserException";
 
-export class AuthService {
 
-    private readonly authRepository: AuthRepository;
+export class UserService {
+
+    private readonly _authRepository: UserRepository;
+
+
     constructor() {
-        this.authRepository = new AuthRepository()
+        this._authRepository = new UserRepository()
+    }
+
+
+    async loginService(username: string, password: string) {
+        const callAllUser = await this._authRepository.readUsers();
+
+
+        const userToEvaluate = callAllUser.find(u => u.username === username);
+
+        if (!userToEvaluate) {
+            throw new UserException("Invalid username or password.");
+        }
+        const isPasswordValid = await bcrypt.compare(password, userToEvaluate.password);
+        if (!isPasswordValid) {
+            throw new UserException("Invalid username or password.");
+        }
+
+        return userToEvaluate;
+
     }
 
     async registerService(username: string, password: string) {
-        const existingUser = await this.authRepository.findByUsername(username);
-        if (existingUser) {
-            throw new Error('Username already exists');
+        const userExisting = await this._authRepository.findByUsername(username);
+        if (userExisting) {
+            throw new Error("user Existing");
         }
-
-        const newUser = await this.authRepository.createUser({ username, password });
-        // return newUser;
-        return HttpResponse.response(HttpStatus.created, newUser, "Usuario creado con exito");
+        const newUser = await this._authRepository.createUser({
+            username,
+            password
+        });
+        //Mandar resposne
+        return newUser;
     }
 
-    async loginService(username: string, password: string) {
-        
-        const user = await this.authRepository.findByUsername(username);
-        if (!user || user.password !== password) {
-            throw new Error('Invalid username or password');
+    async readService(): Promise<IUser[]> {
+        try {
+            const lstUser = await this._authRepository.readUsers();
+            return lstUser;
+
+        } catch (error) {
+            throw new Error("no cargo la  listaxd");
         }
 
-        // Simulate a simple token generation
-        const token = Buffer.from(`${username}:${password}`).toString('base64');
-        return token;
+
     }
-};
+
+    async updateService(userName: string, newUserName: string, newPassword: string): Promise<void> {
+        try {
+            await this._authRepository.updateUsers(userName, newUserName, newPassword);
+        } catch (error) {
+            throw new UserException("Failed to update user: ");
+        }
+    }
+
+    async deleteService(userName: string): Promise<void> {
+        try {
+            await this._authRepository.deleteUser(userName);
+        } catch (error) {
+            throw new UserException("no se pudo borrar");
+        }
+    }
+
+}
+
+
+
+
