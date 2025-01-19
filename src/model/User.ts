@@ -12,7 +12,7 @@ export interface IUserAttributes {
 type UserCreationAttributes = Optional<IUserAttributes, 'id'>;
 
 
-const User: ModelDefined<IUserAttributes,UserCreationAttributes> = db.define(
+export const User: ModelDefined<IUserAttributes,UserCreationAttributes> = db.define(
     'User',
     {
         id: {

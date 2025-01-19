@@ -9,8 +9,9 @@ import { UserValidation } from "./validation";
 import { ErrorCodes } from "../../enums/codesHttpEnum";
 import { error } from 'console';
 import { UserException } from "../../error/UserException";
-import { IUserAttributes } from "../../model/User";
+
 import { UserService } from "./services";
+import { IUserAttributes } from "../../model/User";
 
 
 
@@ -31,20 +32,25 @@ export const RegisterController = async (req: Request) => {
 
 export const readController = async (req: Request) => {
     try {
-
-        const lstUser = await new UserRepository().readUsers()
-        return lstUser;
+        const payload = req.body as IUserAttributes[]
+        return await new UserService().ReadService(payload)
+        
 
     } catch (error) {
-
         throw new Error("there[s not")
-
-
-
     }
 
 }
-//Al subir esto podria manejar dicho error 
+// export const ReadController = async (req: Request) => {
+//     try {
+//         const users = await new UserService().ReadService()
+
+//     } catch (error) {
+
+//     }
+
+// }
+// //Al subir esto podria manejar dicho error 
 export const updateController = async (req: Request, res: Response): Promise<void> => {
     try {
         const userNameToUpdate = req.params.username;
@@ -60,12 +66,12 @@ export const updateController = async (req: Request, res: Response): Promise<voi
 
 export const loginController = async (req: Request) => {
     try {
-        const {username, password} = req.body;
-     
+        const { username, password } = req.body;
+
         //!Manejo de service donde se puede usar el modelo de neogocio dentro de controller 
         const responseC = await new UserRepository().loginAccess(username, password);
 
-        return responseC; 
+        return responseC;
 
 
     } catch (error) {
