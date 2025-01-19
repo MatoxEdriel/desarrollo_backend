@@ -55,7 +55,53 @@ routesUser.post("/register", async (req: Request, res: Response, next: NextFunct
     }
 });
 
-
+/**
+ * @swagger
+ * /getUsers:
+ *   get:
+ *     summary: Obtiene una lista de usuarios.
+ *     description: Devuelve una lista con todos los usuarios registrados.
+ *     tags:
+ *       - Users
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios obtenida correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         example: "John Doe"
+ *                       email:
+ *                         type: string
+ *                         example: "johndoe@example.com"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Error al obtener usuarios."
+ */
 
 routesUser.get("/getUsers", async (req: Request, res: Response, next: NextFunction) => {
     try {

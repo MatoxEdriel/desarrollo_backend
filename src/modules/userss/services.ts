@@ -4,8 +4,9 @@ import UserRepository from './repository';
 import AuthRepository from '../auth/repository';
 import { UserException } from "../../error/UserException";
 import UsersRepository from "../user/repository";
-import { IUserAttributes } from "../../model/User";
+
 import { HttpResponse } from "../../utils/httpResponse";
+import { IUserAttributes } from "../../model/User";
 
 
 
@@ -57,6 +58,18 @@ export class UserService {
         });
         return newUser;
     }
+
+async ReadService(payload:IUserAttributes[]): Promise<IUserAttributes[]>{
+    try {
+        const UsersFromDB = await this._userRepository.ReadUser();
+        return UsersFromDB.map(user => user.toJSON() as IUserAttributes);
+    } catch (error) {
+        throw new Error("tis");
+    }
+
+
+}
+
 
     async readService(): Promise<IUser[]> {
         try {

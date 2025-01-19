@@ -6,18 +6,21 @@ import { HttpStatus } from "../src/enums/codesHttpEnum";
 export const validationToken = (req: Request, res: Response, next: any) => {
 
     //Aqui creariamos el middleware 
-try {
-    const token = req.headers.authorization
-    if (!token) {
-        return HttpResponse.response(HttpStatus.badRequest, "No se ha enviado el token")	
-    }   
-    
+    try {
+        //!Aqui mandarias dicha validacion de tooken
+        const token = req.headers.authorization
+        if (!token) {
+            return HttpResponse.response(HttpStatus.badRequest, "No se ha enviado el token")
+        }
 
-    
-} catch (error) {
-    throw error 
-    
-}
+        const currentlyToken = token.split(" ")[1];
+        const decoded = Jwt.verify(currentlyToken, "secret");
+
+
+    } catch (error) {
+        throw error
+
+    }
 
 
 
